@@ -1,31 +1,26 @@
 import math
 
-# ========== CORE FUNCTIONS ==========
+# ========== CORE FUNCTIONS (used in unit tests) ==========
 
 def celsius_to_fahrenheit(celsius: float) -> float:
-    """Convert Celsius to Fahrenheit"""
     return (celsius * 9/5) + 32
 
 
 def is_even(number: int) -> bool:
-    """Return True if number is even, else False"""
     return number % 2 == 0
 
 
 def factorial(n: int) -> int:
-    """Return factorial of n (0! = 1). Raises ValueError for negative."""
     if n < 0:
         raise ValueError("Negative numbers not allowed")
     return math.factorial(n)
 
 
 def reverse_string(text: str) -> str:
-    """Return reversed string"""
     return text[::-1]
 
 
 def is_prime(n: int) -> bool:
-    """Return True if n is prime, else False"""
     if n <= 1:
         return False
     if n <= 3:
@@ -41,20 +36,44 @@ def is_prime(n: int) -> bool:
     return True
 
 
+# ========== SAFE INPUT HELPERS ==========
+
+def input_float(prompt):
+    while True:
+        value = input(prompt)
+        try:
+            return float(value)
+        except ValueError:
+            print("❌ Invalid input. Please enter a NUMBER (example: 36.6)")
+
+
+def input_int(prompt, allow_negative=True):
+    while True:
+        value = input(prompt)
+        try:
+            num = int(value)
+            if not allow_negative and num < 0:
+                print("❌ Please enter a NON-NEGATIVE integer (0, 1, 2, ...)")
+                continue
+            return num
+        except ValueError:
+            print("❌ Invalid input. Please enter an INTEGER (example: 5)")
+
+
 # ========== MENU PROGRAMS (user interaction) ==========
 
 def run_celsius():
-    c = float(input("Enter Celsius: "))
+    c = input_float("Enter Celsius: ")
     print("Fahrenheit:", celsius_to_fahrenheit(c))
 
 
 def run_even_odd():
-    n = int(input("Enter number: "))
+    n = input_int("Enter integer number: ")
     print("Even" if is_even(n) else "Odd")
 
 
 def run_factorial():
-    n = int(input("Enter non-negative integer: "))
+    n = input_int("Enter NON-NEGATIVE integer: ", allow_negative=False)
     try:
         print("Factorial:", factorial(n))
     except ValueError as e:
@@ -63,11 +82,14 @@ def run_factorial():
 
 def run_reverse():
     text = input("Enter text: ")
+    if not text:
+        print("❌ Input cannot be empty")
+        return
     print("Reversed:", reverse_string(text))
 
 
 def run_prime():
-    n = int(input("Enter number: "))
+    n = input_int("Enter integer number: ")
     print("Prime" if is_prime(n) else "Not prime")
 
 
@@ -99,7 +121,7 @@ def main():
             print("Bye!")
             break
         else:
-            print("Invalid choice")
+            print("❌ Invalid choice. Please enter number 0–5")
 
 
 if __name__ == "__main__":
